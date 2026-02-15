@@ -1,30 +1,46 @@
-async function downloadVideo() {
+const backend = "https://YOUR_RENDER_URL";
+
+async function startDownload() {
 
   const url = document.getElementById("url").value;
   const format = document.getElementById("format").value;
-  const status = document.getElementById("status");
-
-  status.innerText = "Processing...";
+  const quality = document.getElementById("quality").value;
 
   const formData = new FormData();
   formData.append("url", url);
   formData.append("format_type", format);
+  formData.append("quality", quality);
 
-  try {
-    const response = await fetch("https://YOUR_RENDER_BACKEND_URL/download", {
-      method: "POST",
-      body: formData
-    });
+  const response = await fetch(`${backend}/download`, {
+    method: "POST",
+    body: formData
+  });
 
-    const result = await response.json();
+  const data = await response.json();
+  checkStatus(data.file_id);
+}
 
-    if (response.ok) {
-      status.innerText = "Download started successfully!";
-    } else {
-      status.innerText = "Error: " + result.error;
+async function checkStatus(file_id) {
+
+  const interval = setInterval(async () => {
+
+    const res = await fetch(`${backend}/status/${file_id}`);
+    const data = await res.json();
+
+    if (data.status === "processing") {
+      document.getElementById("progress").style.width = "50%";
     }
 
-  } catch (error) {
-    status.innerText = "Server error.";
-  }
+    if (data.status === "completed") {
+      document.getElementById("progress").style.width = "100%";
+      document.getElementById("status").innerText = "Download Completed!";
+      clearInterval(interval);
+    }
+
+    if (data.status === "failed") {
+      document.getElementById("status").innerText = "Download Failed.";
+      clearInterval(interval);
+    }
+
+  }, 2000);
 }
