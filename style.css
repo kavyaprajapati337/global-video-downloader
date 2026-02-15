@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background: rgba(255,255,255,0.1);
+  padding: 30px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  text-align: center;
+  width: 350px;
+  color: white;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  background: #ff4b2b;
+  color: white;
+  cursor: pointer;
+}
